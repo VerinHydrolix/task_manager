@@ -19,8 +19,8 @@
             <v-container>
                 <br>
                 <v-form ref="form" lazy-validation>
-                    <v-text-field  v-model="title" label="Nom de la tâche" :disabled="taskData != null" outlined clearable></v-text-field>
-                    <v-textarea clearable v-model="description" label="Description" auto-grow outlined rows="1" row-height="15" :disabled="taskData != null"></v-textarea>
+                    <v-text-field  v-model="title" label="Nom de la tâche" outlined clearable></v-text-field>
+                    <v-textarea clearable v-model="description" label="Description" auto-grow outlined rows="1" row-height="15"></v-textarea>
                     <div style="border: solid; border-radius: 5px; padding: 15px 15px 15px 15px; text-align: center; border-color: grey; border-width: 1px;">
                       <div v-for="(a, i) in affectation" :key="i">
                         <v-text-field v-model="affectation[i]" label="Affectation">
@@ -52,10 +52,10 @@
                             <h3>Début</h3>
                             <div style="border: solid; border-radius: 5px; padding: 15px 15px 15px 15px; border-color: grey; border-width: 1px;">
                                 <br>
-                                <v-date-picker v-model="beginDate" elevation="15" :disabled="taskData != null"></v-date-picker>
+                                <v-date-picker v-model="beginDate" elevation="15" ></v-date-picker>
                                 <br>
                                 <br>
-                                <v-time-picker v-model="beginTime" format="24hr" :disabled="taskData != null"></v-time-picker>
+                                <v-time-picker v-model="beginTime" format="24hr" ></v-time-picker>
                             </div>
                         </v-col>
                         <v-col style="text-align: center"> 

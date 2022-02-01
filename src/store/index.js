@@ -8,27 +8,31 @@ export default new Vuex.Store({
     accounts: JSON.parse(localStorage.getItem('accounts')) || [],
     connected: false,
     tasks: {
-      tc1: JSON.parse(localStorage.getItem('tc1')) || [], 
-      tc2: JSON.parse(localStorage.getItem('tc2')) || [], 
-      tc3: JSON.parse(localStorage.getItem('tc3')) || [], 
+      tc1: [], 
+      tc2: [], 
+      tc3: [], 
     }
   },
   mutations: {
-    createAccount(state, {nom, prenom, password}){
-      state.accounts.push({id: state.accounts.length, nom: nom, prenom: prenom, password: password});
+    createAccount(state, {username, password}){
+      state.accounts.push({id: state.accounts.length, username: username, password: password});
     },
-    deleteAccount(state, id){
-      state.accounts.splice(state.indexOf(state.accounts.filter(a => a.id == id)[0]), 1);
+    deleteAccount(state, username){
+      state.accounts.splice(state.accounts.findIndex(a => a.username == username), 1);
     },
     modifyAccount(state, account){
       state[state.indexOf(state.accounts.filter(a => a.id == account.id))] = account;
     },
-    setConnected(state, {nom, prenom, password}){
-      if(nom == null){
+    setConnected(state, {username, password}){
+      if(username == null){
         state.connected = false;
+        state.tasks = {tc1: [], tc2: [], tc3: []}
       }
       else{
-        state.connected = {nom: nom, prenom: prenom, password: password};
+        state.connected = {username: username, password: password};
+        state.tasks.tc1 = JSON.parse(localStorage.getItem('tc1'+username)) || []
+        state.tasks.tc2 = JSON.parse(localStorage.getItem('tc2'+username)) || []
+        state.tasks.tc3 = JSON.parse(localStorage.getItem('tc3'+username)) || []
       }
     },
 
@@ -42,17 +46,14 @@ export default new Vuex.Store({
 
     modifyTask(state, {index, column, task}){
       state.tasks[column][index] = task;
-    }
-    
-
-    
+    }    
   },
   actions: {
-    aCreateAccount({commit}, {nom, prenom, password}){
-      if(this.state.accounts.filter(a => a.nom == nom && a.prenom == prenom).length == 0){
+    aCreateAccount({commit}, {username, password}){
+      if(this.state.accounts.filter(a => a.username == username).length == 0){
         console.log("création du compte");
-        commit('createAccount', {nom, prenom, password});
-        commit('setConnected', {nom, prenom, password});
+        commit('createAccount', {username, password});
+        commit('setConnected', {username, password});
         this.dispatch('aSaveAccounts');
         return true;
       }
@@ -61,9 +62,16 @@ export default new Vuex.Store({
         return false;
       }
     },
-    aDeleteAccount({commit}, id){
-      commit('deleteAccount', id);
+    aDeleteAccount({commit}){
+      commit('deleteAccount', this.getters.getUsername);
       this.dispatch('aSaveAccounts');
+      this.dispatch('aDeleteAllUserTasks')
+    },
+    aDeleteAllUserTasks(){
+      let user = this.getters.getUsername
+      localStorage.removeItem("tc1"+user)
+      localStorage.removeItem("tc2"+user)
+      localStorage.removeItem("tc3"+user)
     },
     aModifyAccount({commit}, account){
       commit('modifyAccount', account);
@@ -73,11 +81,11 @@ export default new Vuex.Store({
       localStorage.setItem('accounts', JSON.stringify(this.state.accounts));
     },
     aDisconnect({commit}){
-      commit('setConnected', {nom: null, prenom: null, password: null});
+      commit('setConnected', {username: null, password: null});
     },
-    aConnect({commit}, {nom, prenom, password}){
-      if(this.state.accounts.filter(a => a.nom == nom && a.prenom == prenom && a.password == password).length == 1){
-        commit('setConnected', {nom, prenom, password});
+    aConnect({commit}, {username, password}){
+      if(this.state.accounts.filter(a => a.username == username && a.password == password).length == 1){
+        commit('setConnected', {username, password});
         return true;
       }
       else{
@@ -102,19 +110,16 @@ export default new Vuex.Store({
 
     aSaveLocalStorage({commit}, column){
       console.log(commit)
-      console.log(column);
-      console.log(this.getters.getTasks["tc1"][0]);
-      localStorage.setItem(column, JSON.stringify(this.getters.getTasks[column]));
+      localStorage.setItem(column+this.getters.getUsername, JSON.stringify(this.getters.getTasks[column]));
     }
 
 
   },
   getters: {
     getConnected: state => state.connected,
-
-    getTasks: state => {
-      return state.tasks
-    }
+    getUsername: state => state.connected.username,
+    getUserId: state => state.connected.id,
+    getTasks: state => state.tasks
   },
   modules: {
   },

@@ -3,14 +3,8 @@
     <v-card style="margin: 20px; padding: 20px">
       <v-form ref="form" v-model="valid" lazy-validation>
         <v-text-field
-          v-model="prenom"
-          label="Prénom"
-          outlined
-          :rules="[(v) => !!v || 'Ce champ est obligatoire']"
-        />
-        <v-text-field
-          v-model="nom"
-          label="Nom"
+          v-model="username"
+          label="Nom d'utilisateur"
           outlined
           :rules="[(v) => !!v || 'Ce champ est obligatoire']"
         />
@@ -28,7 +22,7 @@
       <br>
       <!-- <v-btn @click="test()">Test</v-btn> -->
       <v-alert v-if="existingAccountError" type="error">
-      Le compte que vous essayez de créer existe déjà (paire nom + prénom déjà utilisée)
+      Le compte que vous essayez de créer existe déjà (Nom d'utilisateur déjà utilisée)
       </v-alert>
       <v-alert v-if="connectionFailedError" type="error">
       La connection a echouée (les informations sont incorrectes)
@@ -49,7 +43,7 @@ export default {
 
     connect() {
       if (this.$refs.form.validate()) {
-        this.aConnect({nom: this.nom, prenom: this.prenom, password: this.password}).then((validation) => {
+        this.aConnect({username: this.username, password: this.password}).then((validation) => {
           console.log(validation);
           if(validation){
             this.$router.push('/home');
@@ -64,7 +58,7 @@ export default {
 
     createAccount() {
       if (this.$refs.form.validate()) {
-          this.aCreateAccount({nom: this.nom, prenom: this.prenom, password: this.password}).then((validation) => {
+          this.aCreateAccount({username: this.username, password: this.password}).then((validation) => {
             console.log(validation);
             
             if(validation){
@@ -86,8 +80,7 @@ export default {
       existingAccountError: false,
       connectionFailedError: false,
       valid: true,
-      prenom: undefined,
-      nom: undefined,
+      username: undefined,
       password: undefined,
     };
   },

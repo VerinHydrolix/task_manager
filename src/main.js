@@ -10,12 +10,12 @@ Vue.config.productionTip = false
 
 
 
-new Vue({
+Vue.prototype.$taskManager = new Vue({
   store,
   vuetify,
   router,
   render: h => h(App)
-}).$mount('#app')
+}).$mount('#app').$children[0]
 
 
 //load theme from local storage

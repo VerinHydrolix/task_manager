@@ -87,6 +87,23 @@
 
 
       </div>
+
+      <v-dialog v-model="showPopup" width="500">
+        <v-card>
+          <v-card-title>
+          {{popupTitle}}
+          </v-card-title>
+          <v-card-text>
+          {{popupText}}
+          </v-card-text>
+          <v-divider></v-divider>
+          <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="grey" text @click="closePopup">{{popupButtonAbortText}}</v-btn>
+          <v-btn color="red" text @click="confirm">{{popupButtonConfirmText}}</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
       
 
      
@@ -99,24 +116,12 @@
 </template>
 
 <script>
+import popup from './mixins/popup'
 
 export default {
   name: 'App',
-
-
+  mixins: [popup],
   data: () => ({
   }),
-
-  methods: {
-
-
-    // test: function(){
-    //   console.log(this.aFaire);
-    //   console.log(this.enCours);
-    //   console.log(this.termine);
-    // }
-    
-  }
-  
 };
 </script>
