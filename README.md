@@ -1,4 +1,7 @@
-# firstproject
+# Task Manager App
+
+## Good to know
+To change the status of a task when using the app, you just have to drag and drop the card to another container
 
 ## Project setup
 ```
